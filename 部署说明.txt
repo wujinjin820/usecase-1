@@ -1,0 +1,23 @@
+🚀 直接部署到 Vercel（绕过 GitHub）
+
+最简单的方法：拖拽部署
+
+步骤：
+1. 访问：https://vercel.com/dashboard
+2. 登录你的 Vercel 账号
+3. 点击 "Add New..." → "Project"
+4. 在页面底部找到 "Deploy" 区域
+5. 将整个 usecase-1 文件夹拖拽到拖拽区域
+6. 配置：
+   - Framework: Other
+   - Build Command: 留空
+   - Output Directory: ./
+7. 点击 "Deploy"
+8. 等待完成，获得链接
+
+或者使用命令行（如果已安装 Node.js）：
+cd /Users/wujinjin/Documents/GitHub/usecase-1
+npx vercel --prod
+
+当前项目位置：
+/Users/wujinjin/Documents/GitHub/usecase-1
