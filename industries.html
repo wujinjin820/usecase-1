@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industries | Apex Consulting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Industries Page Specific Styles */
+        .industries-hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            overflow: hidden;
+        }
+        
+        .industries-hero-bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(0, 102, 255, 0.25) 0%, transparent 70%);
+        }
+        
+        .industries-hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 1100px;
+            padding: 0 var(--space-lg);
+        }
+        
+        .industries-hero-title {
+            font-size: clamp(4rem, 14vw, 12rem);
+            font-weight: 700;
+            line-height: 0.85;
+            letter-spacing: -0.06em;
+            margin-bottom: var(--space-xl);
+            background: linear-gradient(135deg, #ffffff 0%, #0066ff 50%, rgba(255,255,255,0.5) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: industriesTitleReveal 1.5s var(--ease-out) forwards;
+            opacity: 0;
+        }
+        
+        @keyframes industriesTitleReveal {
+            from {
+                opacity: 0;
+                transform: scale(0.8) rotateY(90deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotateY(0deg);
+            }
+        }
+        
+        .industries-hero-subtitle {
+            font-size: clamp(1.25rem, 3vw, 1.875rem);
+            opacity: 0.7;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeSlideUp 1s var(--ease-out) 0.4s forwards;
+            opacity: 0;
+        }
+        
+        /* Industries Grid - Bold Design */
+        .industries-section {
+            padding: var(--space-4xl) 0;
+            background: var(--color-bg-light);
+            color: var(--color-text-dark);
+        }
+        
+        .industries-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-xl);
+            margin-top: var(--space-3xl);
+        }
+        
+        .industry-card {
+            position: relative;
+            min-height: 500px;
+            border-radius: var(--radius-2xl);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all var(--duration-slow) var(--ease-out);
+            border: 3px solid transparent;
+        }
+        
+        .industry-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+            z-index: 1;
+            transition: opacity var(--duration-normal) ease;
+        }
+        
+        .industry-card:hover {
+            transform: scale(1.03);
+            border-color: #0066ff;
+            box-shadow: 0 32px 96px rgba(0, 102, 255, 0.3);
+        }
+        
+        .industry-card:hover::before {
+            opacity: 0.8;
+        }
+        
+        .industry-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.2);
+            transition: all var(--duration-slow) var(--ease-out);
+        }
+        
+        .industry-card:hover .industry-image {
+            filter: grayscale(0%) contrast(1);
+            transform: scale(1.1);
+        }
+        
+        .industry-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: var(--space-2xl);
+            color: var(--color-white);
+        }
+        
+        .industry-number {
+            position: absolute;
+            top: var(--space-xl);
+            right: var(--space-xl);
+            font-size: clamp(4rem, 8vw, 8rem);
+            font-weight: 700;
+            opacity: 0.15;
+            line-height: 1;
+            transition: all var(--duration-normal) ease;
+        }
+        
+        .industry-card:hover .industry-number {
+            opacity: 0.3;
+            transform: scale(1.1);
+        }
+        
+        .industry-icon {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-md);
+            font-size: 2rem;
+            transition: all var(--duration-normal) ease;
+        }
+        
+        .industry-card:hover .industry-icon {
+            background: rgba(0, 102, 255, 0.3);
+            transform: rotate(5deg) scale(1.1);
+        }
+        
+        .industry-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            line-height: 1.1;
+        }
+        
+        .industry-desc {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            opacity: 0.9;
+            margin-bottom: var(--space-md);
+        }
+        
+        .industry-stats {
+            display: flex;
+            gap: var(--space-xl);
+            margin-top: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .industry-stat {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .industry-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .industry-stat-label {
+            font-family: var(--font-mono);
+            font-size: 0.625rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.6;
+            margin-top: 0.25rem;
+        }
+        
+        .industry-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: var(--space-md);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-white);
+            opacity: 0.8;
+            transition: all var(--duration-fast) ease;
+        }
+        
+        .industry-card:hover .industry-link {
+            opacity: 1;
+            transform: translateX(8px);
+        }
+        
+        .industry-link svg {
+            width: 16px;
+            height: 16px;
+            transition: transform var(--duration-fast) ease;
+        }
+        
+        .industry-card:hover .industry-link svg {
+            transform: translateX(4px);
+        }
+        
+        /* Featured Industry */
+        .industry-card.featured {
+            grid-column: span 2;
+            min-height: 600px;
+        }
+        
+        .industry-card.featured .industry-content {
+            max-width: 60%;
+        }
+        
+        /* Capabilities Section */
+        .capabilities-section {
+            padding: var(--space-4xl) 0;
+            background: var(--color-black);
+            color: var(--color-white);
+        }
+        
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-xl);
+            margin-top: var(--space-3xl);
+        }
+        
+        .capability-card {
+            padding: var(--space-xl);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-xl);
+            transition: all var(--duration-normal) var(--ease-out);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .capability-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #0066ff 0%, transparent 100%);
+            transform: scaleX(0);
+            transition: transform var(--duration-normal) var(--ease-out);
+        }
+        
+        .capability-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-8px);
+            border-color: rgba(0, 102, 255, 0.5);
+        }
+        
+        .capability-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .capability-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 102, 255, 0.2);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-md);
+            font-size: 1.75rem;
+        }
+        
+        .capability-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .capability-desc {
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            opacity: 0.6;
+        }
+        
+        /* Case Studies Preview */
+        .cases-preview-section {
+            padding: var(--space-4xl) 0;
+            background: var(--color-bg-light);
+            color: var(--color-text-dark);
+        }
+        
+        .cases-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            margin-top: var(--space-3xl);
+        }
+        
+        .case-preview-card {
+            background: var(--color-white);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            border: 2px solid rgba(0, 0, 0, 0.06);
+            transition: all var(--duration-normal) var(--ease-out);
+            cursor: pointer;
+        }
+        
+        .case-preview-card:hover {
+            transform: translateY(-8px);
+            border-color: #0066ff;
+            box-shadow: 0 24px 64px rgba(0, 102, 255, 0.15);
+        }
+        
+        .case-preview-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: filter var(--duration-normal) ease;
+        }
+        
+        .case-preview-card:hover .case-preview-image {
+            filter: grayscale(0%);
+        }
+        
+        .case-preview-content {
+            padding: var(--space-lg);
+        }
+        
+        .case-preview-industry {
+            font-family: var(--font-mono);
+            font-size: 0.625rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #0066ff;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .case-preview-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .case-preview-desc {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            opacity: 0.6;
+        }
+        
+        @media (max-width: 1024px) {
+            .industries-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .industry-card.featured {
+                grid-column: span 1;
+            }
+            
+            .industry-card.featured .industry-content {
+                max-width: 100%;
+            }
+            
+            .capabilities-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cases-preview-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">▲</span>
+                <span class="logo-text">APEX</span>
+            </a>
+            <div class="nav-links">
+                <a href="careers.html" class="nav-link">Careers</a>
+                <a href="team.html" class="nav-link">Team</a>
+                <a href="industries.html" class="nav-link">Industries</a>
+                <a href="locations.html" class="nav-link">Locations</a>
+                <a href="index.html#contact" class="nav-btn">Book a Consultation</a>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <a href="careers.html" class="mobile-link">Careers</a>
+            <a href="team.html" class="mobile-link">Team</a>
+            <a href="industries.html" class="mobile-link">Industries</a>
+            <a href="locations.html" class="mobile-link">Locations</a>
+            <a href="index.html#contact" class="mobile-link cta">Book a Consultation</a>
+        </div>
+    </div>
+
+    <!-- Hero -->
+    <section class="industries-hero">
+        <div class="industries-hero-bg"></div>
+        <div class="industries-hero-content">
+            <h1 class="industries-hero-title">Industry<br>Expertise</h1>
+            <p class="industries-hero-subtitle">Deep sector knowledge across 12 core industries. We understand the unique challenges and opportunities in Greater China's dynamic markets.</p>
+        </div>
+    </section>
+
+    <!-- Industries Grid -->
+    <section class="industries-section">
+        <div class="container">
+            <div class="openings-header">
+                <span class="section-tag">Our Focus</span>
+                <h2 class="section-title">Industries we<span class="highlight"> transform</span></h2>
+            </div>
+            <div class="industries-grid">
+                <div class="industry-card featured">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80" alt="Technology" class="industry-image">
+                    <div class="industry-content">
+                        <div class="industry-number">01</div>
+                        <div class="industry-icon">💻</div>
+                        <h3 class="industry-title">Technology & Software</h3>
+                        <p class="industry-desc">From startups to tech giants, we help technology companies scale, innovate, and win in China's competitive digital landscape.</p>
+                        <div class="industry-stats">
+                            <div class="industry-stat">
+                                <span class="industry-stat-number">80+</span>
+                                <span class="industry-stat-label">Projects</span>
+                            </div>
+                            <div class="industry-stat">
+                                <span class="industry-stat-number">45%</span>
+                                <span class="industry-stat-label">Growth Avg</span>
+                            </div>
+                        </div>
+                        <a href="#" class="industry-link">
+                            Explore Cases
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="industry-card">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80" alt="Financial Services" class="industry-image">
+                    <div class="industry-content">
+                        <div class="industry-number">02</div>
+                        <div class="industry-icon">🏦</div>
+                        <h3 class="industry-title">Financial Services</h3>
+                        <p class="industry-desc">Digital transformation for banks, securities firms, and fintech companies across Greater China.</p>
+                        <div class="industry-stats">
+                            <div class="industry-stat">
+                                <span class="industry-stat-number">60+</span>
+                                <span class="industry-stat-label">Projects</span>
+                            </div>
+                        </div>
+                        <a href="#" class="industry-link">
+                            Learn More
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="industry-card">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80" alt="Retail" class="industry-image">
+                    <div class="industry-content">
+                        <div class="industry-number">03</div>
+                        <div class="industry-icon">🛍️</div>
+                        <h3 class="industry-title">Retail & Consumer</h3>
+                        <p class="industry-desc">Omnichannel strategies, brand positioning, and market expansion for consumer brands.</p>
+                        <div class="industry-stats">
+                            <div class="industry-stat">
+                                <span class="industry-stat-number">75+</span>
+                                <span class="industry-stat-label">Projects</span>
+                            </div>
+                        </div>
+                        <a href="#" class="industry-link">
+                            Learn More
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="industry-card">
+                    <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&q=80" alt="Manufacturing" class="industry-image">
+                    <div class="industry-content">
+                        <div class="industry-number">04</div>
+                        <div class="industry-icon">🏭</div>
+                        <h3 class="industry-title">Manufacturing</h3>
+                        <p class="industry-desc">Smart factory transformation, supply chain optimization, and operational excellence.</p>
+                        <div class="industry-stats">
+                            <div class="industry-stat">
+                                <span class="industry-stat-number">50+</span>
+                                <span class="industry-stat-label">Projects</span>
+                            </div>
+                        </div>
+                        <a href="#" class="industry-link">
+                            Learn More
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="industry-card">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80" alt="Healthcare" class="industry-image">
+                    <div class="industry-content">
+                        <div class="industry-number">05</div>
+                        <div class="industry-icon">🏥</div>
+                        <h3 class="industry-title">Healthcare</h3>
+                        <p class="industry-desc">Digital health, service model innovation, and market entry strategies.</p>
+                        <div class="industry-stats">
+                            <div class="industry-stat">
+                                <span class="industry-stat-number">40+</span>
+                                <span class="industry-stat-label">Projects</span>
+                            </div>
+                        </div>
+                        <a href="#" class="industry-link">
+                            Learn More
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="industry-card">
+                    <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&q=80" alt="Energy" class="industry-image">
+                    <div class="industry-content">
+                        <div class="industry-number">06</div>
+                        <div class="industry-icon">⚡</div>
+                        <h3 class="industry-title">Energy & Utilities</h3>
+                        <p class="industry-desc">Sustainability transformation, smart grid, and renewable energy strategies.</p>
+                        <div class="industry-stats">
+                            <div class="industry-stat">
+                                <span class="industry-stat-number">30+</span>
+                                <span class="industry-stat-label">Projects</span>
+                            </div>
+                        </div>
+                        <a href="#" class="industry-link">
+                            Learn More
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities -->
+    <section class="capabilities-section">
+        <div class="container">
+            <div class="openings-header" style="text-align: center;">
+                <span class="section-tag" style="color: var(--color-text-muted-light);">How We Help</span>
+                <h2 class="section-title" style="color: var(--color-white);">Industry-specific<span class="highlight"> capabilities</span></h2>
+            </div>
+            <div class="capabilities-grid">
+                <div class="capability-card">
+                    <div class="capability-icon">📊</div>
+                    <h3 class="capability-title">Market Intelligence</h3>
+                    <p class="capability-desc">Deep market research and competitive analysis tailored to each industry's unique dynamics.</p>
+                </div>
+                <div class="capability-card">
+                    <div class="capability-icon">🎯</div>
+                    <h3 class="capability-title">Strategic Planning</h3>
+                    <p class="capability-desc">Industry-specific strategy frameworks and roadmaps that account for regulatory and market realities.</p>
+                </div>
+                <div class="capability-card">
+                    <div class="capability-icon">⚙️</div>
+                    <h3 class="capability-title">Operational Excellence</h3>
+                    <p class="capability-desc">Best practices and benchmarks from leading companies in each sector, adapted for China.</p>
+                </div>
+                <div class="capability-card">
+                    <div class="capability-icon">🚀</div>
+                    <h3 class="capability-title">Digital Transformation</h3>
+                    <p class="capability-desc">Sector-specific digital strategies, from fintech to smart manufacturing.</p>
+                </div>
+                <div class="capability-card">
+                    <div class="capability-icon">🤝</div>
+                    <h3 class="capability-title">Partnership Development</h3>
+                    <p class="capability-desc">Connect with key players, suppliers, and partners across Greater China.</p>
+                </div>
+                <div class="capability-card">
+                    <div class="capability-icon">📈</div>
+                    <h3 class="capability-title">Growth Acceleration</h3>
+                    <p class="capability-desc">Proven methodologies to scale businesses within each industry's constraints and opportunities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Studies Preview -->
+    <section class="cases-preview-section">
+        <div class="container">
+            <div class="openings-header">
+                <span class="section-tag">Success Stories</span>
+                <h2 class="section-title">Recent<span class="highlight"> transformations</span></h2>
+            </div>
+            <div class="cases-preview-grid">
+                <div class="case-preview-card">
+                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80" alt="Case" class="case-preview-image">
+                    <div class="case-preview-content">
+                        <div class="case-preview-industry">Fintech</div>
+                        <h3 class="case-preview-title">Securities Firm Digital Transformation</h3>
+                        <p class="case-preview-desc">Lifted online revenue share from 15% to 68% through comprehensive digital operating model redesign.</p>
+                    </div>
+                </div>
+                <div class="case-preview-card">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&q=80" alt="Case" class="case-preview-image">
+                    <div class="case-preview-content">
+                        <div class="case-preview-industry">Retail</div>
+                        <h3 class="case-preview-title">Omnichannel Rebuild</h3>
+                        <p class="case-preview-desc">Unified online-offline membership, increasing repeat purchase by 35%.</p>
+                    </div>
+                </div>
+                <div class="case-preview-card">
+                    <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&q=80" alt="Case" class="case-preview-image">
+                    <div class="case-preview-content">
+                        <div class="case-preview-industry">Manufacturing</div>
+                        <h3 class="case-preview-title">Smart Factory Blueprint</h3>
+                        <p class="case-preview-desc">Improved productivity by 28% and reduced energy use by 18%.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <span class="logo-icon">▲</span>
+                        <span class="logo-text">APEX</span>
+                    </a>
+                    <p class="footer-tagline">Strategy. Transformation. Growth.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Services</h4>
+                        <a href="index.html#services">Strategy & Growth</a>
+                        <a href="index.html#services">Digital Transformation</a>
+                        <a href="index.html#services">Organization & Talent</a>
+                        <a href="index.html#services">Brand & GTM</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="index.html#about">About</a>
+                        <a href="team.html">Team</a>
+                        <a href="careers.html">Careers</a>
+                        <a href="index.html#insights">Insights</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <a href="index.html#insights">Insights</a>
+                        <a href="index.html#cases">Case Studies</a>
+                        <a href="industries.html">Industries</a>
+                        <a href="locations.html">Locations</a>
+                    </div>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Subscribe</h4>
+                    <p>Get research and market insights from China and APAC</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button type="submit">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    © 2026 Apex Consulting. All rights reserved.
+                </div>
+                <div class="footer-legal">
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Cookie Settings</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#" class="social-link" aria-label="WeChat">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 00.167-.054l1.903-1.114a.864.864 0 01.717-.098c.89.282 1.858.437 2.837.437.091 0 .181-.005.272-.006-.153-.5-.233-1.02-.233-1.558 0-3.664 3.51-6.63 7.838-6.63.073 0 .144.003.217.006C15.883 4.528 12.546 2.188 8.69 2.188zM5.5 7.1a.9.9 0 110 1.8.9.9 0 010-1.8zm6.4 0a.9.9 0 110 1.8.9.9 0 010-1.8z"/>
+                            <path d="M23.998 14.34c0-3.251-3.163-5.889-7.066-5.889-3.904 0-7.067 2.638-7.067 5.889 0 3.252 3.163 5.89 7.067 5.89.762 0 1.495-.119 2.175-.336a.697.697 0 01.58.08l1.46.855a.264.264 0 00.135.044c.13 0 .234-.104.234-.233 0-.057-.023-.116-.038-.173l-.299-1.137a.477.477 0 01.173-.54c1.471-1.083 2.646-2.692 2.646-4.45zm-9.333-1a.73.73 0 110 1.46.73.73 0 010-1.46zm4.533 0a.73.73 0 110 1.46.73.73 0 010-1.46z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-link" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

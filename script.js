@@ -17,38 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
     initFormHandling();
     initFloatingShapes();
     initSectionTitleAnimations();
+    initPageRouter(); // Initialize SPA routing
 });
 
 /**
  * Cursor Glow Effect
  */
 function initCursorGlow() {
+    // Cursor glow disabled
     const cursorGlow = document.getElementById('cursorGlow');
-    
-    if (!cursorGlow) return;
-    
-    let mouseX = 0;
-    let mouseY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-    
-    function animate() {
-        // Smooth follow effect
-        currentX += (mouseX - currentX) * 0.08;
-        currentY += (mouseY - currentY) * 0.08;
-        
-        cursorGlow.style.left = currentX + 'px';
-        cursorGlow.style.top = currentY + 'px';
-        
-        requestAnimationFrame(animate);
+    if (cursorGlow) {
+        cursorGlow.style.display = 'none';
     }
-    
-    animate();
 }
 
 /**
@@ -594,21 +574,21 @@ function showNotification(message) {
 }
 
 /**
- * Mouse-based Parallax on Hero
+ * Mouse-based Parallax on Hero - Disabled to prevent content shaking
  */
-document.addEventListener('mousemove', (e) => {
-    const heroContent = document.querySelector('.hero-content');
-    if (!heroContent) return;
-    
-    const rect = heroContent.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
-    const moveX = (e.clientX - centerX) / 80;
-    const moveY = (e.clientY - centerY) / 80;
-    
-    heroContent.style.transform = `translate(${moveX}px, ${moveY}px)`;
-});
+// document.addEventListener('mousemove', (e) => {
+//     const heroContent = document.querySelector('.hero-content');
+//     if (!heroContent) return;
+//     
+//     const rect = heroContent.getBoundingClientRect();
+//     const centerX = rect.left + rect.width / 2;
+//     const centerY = rect.top + rect.height / 2;
+//     
+//     const moveX = (e.clientX - centerX) / 80;
+//     const moveY = (e.clientY - centerY) / 80;
+//     
+//     heroContent.style.transform = `translate(${moveX}px, ${moveY}px)`;
+// });
 
 /**
  * Intersection Observer for Section Backgrounds
@@ -633,16 +613,134 @@ window.addEventListener('load', () => {
     initSectionTransitions();
 });
 
-// Scroll-triggered class changes
-window.addEventListener('scroll', () => {
-    const scrollY = window.pageYOffset;
+// Scroll-triggered class changes - Disabled to prevent content shaking
+// let ticking = false;
+// window.addEventListener('scroll', () => {
+//     if (!ticking) {
+//         window.requestAnimationFrame(() => {
+//             const scrollY = window.pageYOffset;
+//             
+//             // Update hero elements based on scroll (only on home page)
+//             const heroTitle = document.querySelector('#home-page .hero-title');
+//             if (heroTitle && document.getElementById('home-page').style.display !== 'none') {
+//                 const opacity = Math.max(0, 1 - scrollY / 600);
+//                 const scale = Math.max(0.8, 1 - scrollY / 3000);
+//                 heroTitle.style.opacity = opacity;
+//                 heroTitle.style.transform = `translateZ(0) scale(${scale})`;
+//             }
+//             
+//             ticking = false;
+//         });
+//         ticking = true;
+//     }
+// });
+
+/**
+ * Single Page Application Router
+ */
+function initPageRouter() {
+    const pages = {
+        'home': document.getElementById('home-page'),
+        'careers': document.getElementById('careers-page'),
+        'team': document.getElementById('team-page'),
+        'industries': document.getElementById('industries-page'),
+        'locations': document.getElementById('locations-page')
+    };
     
-    // Update hero elements based on scroll
-    const heroTitle = document.querySelector('.hero-title');
-    if (heroTitle) {
-        const opacity = Math.max(0, 1 - scrollY / 600);
-        const scale = Math.max(0.8, 1 - scrollY / 3000);
-        heroTitle.style.opacity = opacity;
-        heroTitle.style.transform = `scale(${scale})`;
+    // Get current page from hash or default to home
+    function getCurrentPage() {
+        const hash = window.location.hash.slice(1);
+        // If hash is empty or contact, show home page
+        if (!hash || hash === 'contact' || hash === 'about' || hash === 'services' || hash === 'cases' || hash === 'insights') {
+            return 'home';
+        }
+        return hash in pages ? hash : 'home';
     }
-});
+    
+    // Show page with animation
+    function showPage(pageId) {
+        // Hide all pages
+        Object.values(pages).forEach(page => {
+            if (page) {
+                page.style.display = 'none';
+                page.classList.remove('active');
+            }
+        });
+        
+        // Show target page
+        const targetPage = pages[pageId];
+        if (targetPage) {
+            targetPage.style.display = 'block';
+            setTimeout(() => {
+                targetPage.classList.add('active');
+                // Only scroll to top if not navigating to a section anchor
+                if (!window.location.hash.includes('contact') && 
+                    !window.location.hash.includes('about') && 
+                    !window.location.hash.includes('services') &&
+                    !window.location.hash.includes('cases') &&
+                    !window.location.hash.includes('insights')) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, 50);
+        }
+        
+        // Update active nav link
+        document.querySelectorAll('.nav-link, .mobile-link').forEach(link => {
+            link.classList.remove('active');
+            const href = link.getAttribute('href');
+            if (href === `#${pageId}`) {
+                link.classList.add('active');
+            }
+        });
+    }
+    
+    // Handle navigation clicks
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            if (href.startsWith('#')) {
+                const pageId = href.slice(1);
+                // If it's a section anchor on home page, don't prevent default
+                if (pageId === 'contact' || pageId === 'about' || pageId === 'services' || pageId === 'cases' || pageId === 'insights') {
+                    // Show home page first, then let browser scroll to section
+                    if (window.location.hash.slice(1) !== 'home' && !window.location.hash.slice(1)) {
+                        e.preventDefault();
+                        window.location.hash = 'home';
+                        setTimeout(() => {
+                            window.location.hash = href;
+                        }, 100);
+                    }
+                    return;
+                }
+                
+                // Handle page navigation
+                if (pages[pageId]) {
+                    e.preventDefault();
+                    window.location.hash = pageId;
+                    showPage(pageId);
+                }
+            }
+        });
+    });
+    
+    // Handle hash changes
+    window.addEventListener('hashchange', () => {
+        showPage(getCurrentPage());
+    });
+    
+    // Initialize on load
+    showPage(getCurrentPage());
+}
+
+/**
+ * Scroll to office card (for locations page)
+ */
+function scrollToOffice(officeId) {
+    const office = document.getElementById(officeId);
+    if (office) {
+        office.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+// Make scrollToOffice available globally
+window.scrollToOffice = scrollToOffice;
